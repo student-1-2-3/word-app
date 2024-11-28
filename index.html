@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英単語帳アプリ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* 基本設定 */
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+
+    /* ヘッダー */
+    #header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    /* ボタン */
+    button {
+      padding: 12px 25px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(1);
+    }
+
+    button:disabled {
+      background-color: #b0c4de;
+      cursor: not-allowed;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* 進捗表示 */
+    #progress {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    /* カード */
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card h2 {
+      font-size: 2rem;
+      color: #333;
+      margin: 20px 0;
+    }
+
+    .card p {
+      font-size: 1.5rem;
+      color: #666;
+    }
+
+    /* ボタンの配置 */
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    /* モバイル対応 */
+    @media (max-width: 768px) {
+      button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+      .card h2 {
+        font-size: 1.8rem;
+      }
+      .card p {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <button onclick="shuffleWords()">ランダム出題</button>
+    <button onclick="resetList()">リセット</button>
+    <button onclick="exportCSV()">エクスポート</button>
+    <button onclick="document.getElementById('importFileAdd').click()">インポート（追加）</button>
+    <button onclick="document.getElementById('importFileReplace').click()">インポート（置換）</button>
+    <input type="file" id="importFileAdd" accept=".csv" onchange="importCSV(event, 'add')">
+    <input type="file" id="importFileReplace" accept=".csv" onchange="importCSV(event, 'replace')">
+  </div>
+
+  <div id="progress">Loading progress...</div>
+
+  <div class="card">
+    <h2 id="wordDisplay">Loading...</h2>
+    <p id="meaningDisplay"></p>
+  </div>
+
+  <div class="actions">
+    <button id="confirmButton" onclick="showBack()">確認</button>
+    <button id="learnedButton" onclick="markAsLearned()">覚えた</button>
+    <button id="notLearnedButton" onclick="nextCard()">覚えていない</button>
+    <button id="speakButton" onclick="speakCurrentWord()">🔊 発音</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
