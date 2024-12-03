@@ -543,7 +543,7 @@ function speakCurrentWord() {
   }
   const utterance = new SpeechSynthesisUtterance(data[index].word);
   utterance.lang = 'en-US';
-  utterance.rate = 0.9;
+  utterance.rate = 0.8;
   utterance.pitch = 1.0;
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utterance);
