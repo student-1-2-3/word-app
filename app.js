@@ -528,7 +528,21 @@ function showHint() {
   hintDisplay.textContent = data[index].hint || 'ヒントはありません';
 }
 
-function speakCurrentWord() {
+function speakCurrentWord() { 
+  // ResponsiveVoice.js を利用した実装を追加
+  if (typeof responsiveVoice !== 'undefined') {
+    // 現在の単語データが有効かチェック
+    if (data[index] && data[index].word) {
+      // ResponsiveVoice.js を使用して発音
+      responsiveVoice.speak(data[index].word, 'UK English Male', { rate: 0.9 });
+      console.log(`ResponsiveVoiceで発音中: ${data[index].word}`);
+    } else {
+      console.error('Invalid data or index for speech synthesis:', data, index);
+    }
+    return; // ResponsiveVoiceでの処理が完了した場合、以降のコードをスキップ
+  }
+
+  // 旧コード: SpeechSynthesisを利用
   if (!window.speechSynthesis) {
     alert('このブラウザは音声合成に対応していません。');
     return;
@@ -551,7 +565,7 @@ function speakCurrentWord() {
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
 
-    console.log(`発音中: ${data[index].word}`);
+    console.log(`SpeechSynthesisで発音中: ${data[index].word}`);
   } else {
     console.error('Invalid data or index for speech synthesis:', data, index);
   }
