@@ -534,19 +534,27 @@ function speakCurrentWord() {
     return;
   }
 
+  // 現在の単語データが有効かチェック
   if (data[index] && data[index].word) {
+    // 新しいコード：音声合成の設定を明示化
     const utterance = new SpeechSynthesisUtterance(data[index].word);
-    utterance.lang = 'en-US';
+    utterance.lang = 'en-US'; // 英語（アメリカ）
+    utterance.rate = 0.9;     // 発音速度を調整
+    utterance.pitch = 1.0;    // ピッチをデフォルトに設定
+
+    // 旧コードをコメントアウト
+    // const utterance = new SpeechSynthesisUtterance(data[index].word);
+    // utterance.lang = 'en-US';
+    // window.speechSynthesis.speak(utterance);
+
+    // 修正：音声再生前に既存の音声をキャンセル
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
+
+    console.log(`発音中: ${data[index].word}`);
   } else {
     console.error('Invalid data or index for speech synthesis:', data, index);
   }
-  const utterance = new SpeechSynthesisUtterance(data[index].word);
-  utterance.lang = 'en-US';
-  utterance.rate = 0.8;
-  utterance.pitch = 1.0;
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(utterance);
 }
 
 function markAsLearned() {
