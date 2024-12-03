@@ -15,12 +15,10 @@
       color: #333;
     }
 
-    /* ヘッダー */
     #header {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      gap: 15px;
       background-color: #007bff;
       color: white;
       padding: 15px;
@@ -28,9 +26,8 @@
       font-weight: 500;
     }
 
-    /* ボタン */
     button {
-      padding: 12px 25px;
+      padding: 10px 20px;
       border: none;
       background-color: #007bff;
       color: white;
@@ -59,7 +56,82 @@
       display: none;
     }
 
-    /* 進捗表示 */
+    /* ハンバーガーメニュー */
+    .hamburger-menu {
+      position: relative;
+    }
+
+    .hamburger-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .menu-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 50px;
+      background-color: white;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+      min-width: 200px;
+      z-index: 1;
+    }
+
+    .menu-content button,
+    .menu-content label {
+      background-color: white;
+      color: #333;
+      border: none;
+      padding: 12px 20px;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: block;
+    }
+
+    .menu-content input[type="number"] {
+      width: calc(100% - 24px);
+      margin: 12px auto;
+      padding: 8px;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    .menu-content button:hover {
+      background-color: #f1f1f1;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+      height: 250px;
+      margin: 20px auto;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
     #progress {
       text-align: center;
       margin: 20px 0;
@@ -67,41 +139,29 @@
       font-weight: 500;
     }
 
-    /* カード */
-    .card {
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
+    #currentSection {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+
+    #sections {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
       margin: 20px auto;
-      padding: 20px;
       text-align: center;
     }
 
-    .card h2 {
-      font-size: 2rem;
-      color: #333;
-      margin: 20px 0;
-    }
-
-    .card p {
-      font-size: 1.5rem;
-      color: #666;
-    }
-
-    /* ボタンの配置 */
-    .actions {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    /* モバイル対応 */
     @media (max-width: 768px) {
       button {
-        padding: 10px 20px;
+        padding: 8px 15px;
         font-size: 0.9rem;
+      }
+      .card {
+        height: 200px;
       }
       .card h2 {
         font-size: 1.8rem;
@@ -109,33 +169,176 @@
       .card p {
         font-size: 1.2rem;
       }
+      .actions {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
   <div id="header">
-    <button onclick="shuffleWords()">ランダム出題</button>
-    <button onclick="resetList()">リセット</button>
-    <button onclick="exportCSV()">エクスポート</button>
-    <button onclick="document.getElementById('importFileAdd').click()">インポート（追加）</button>
-    <button onclick="document.getElementById('importFileReplace').click()">インポート（置換）</button>
-    <input type="file" id="importFileAdd" accept=".csv" onchange="importCSV(event, 'add')">
-    <input type="file" id="importFileReplace" accept=".csv" onchange="importCSV(event, 'replace')">
+    <div>
+      <button onclick="shuffleWords()">シャッフル</button>
+      <button onclick="resetList()">リセット</button>
+    </div>
+
+<!-- ハンバーガーメニュー -->
+<div class="hamburger-menu">
+  <button class="hamburger-button">≡</button>
+  <div class="menu-content">
+    <h3 class="menu-section-title">エクスポート</h3>
+    <button onclick="exportCSV()" title="未学習の全セクションデータをCSV形式でエクスポートします">
+      全データをエクスポート
+    </button>
+    <button onclick="exportMyWordsToCSV()" title="My単語帳をCSV形式でエクスポートします">
+      My単語帳をエクスポート
+    </button>
+
+    <h3 class="menu-section-title">インポート</h3>
+    <button onclick="document.getElementById('importFileAdd').click()" title="CSV形式でデータを追加します">
+      CSVから追加
+    </button>
+    <button onclick="document.getElementById('importFileReplace').click()" title="CSV形式でデータを置換します">
+      CSVで置換
+    </button>
+    <input type="file" id="importFileAdd" accept=".csv" onchange="importCSV(event, 'add')" style="display: none;">
+    <input type="file" id="importFileReplace" accept=".csv" onchange="importCSV(event, 'replace')" style="display: none;">
+
+    <h3 class="menu-section-title">セクション設定</h3>
+    <label for="sectionSizeInput" title="セクションごとの単語数を設定します">
+      セクション単語数:
+    </label>
+    <input type="number" id="sectionSizeInput" min="1" max="100" value="50">
+    <button onclick="updateSectionSize()" title="設定した単語数でセクションを更新します">
+      更新
+    </button>
+  </div>
+</div>
+
+<style>
+  .menu-content {
+    display: none; /* 初期状態で非表示 */
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    min-width: 250px;
+    padding: 10px;
+    z-index: 1;
+  }
+
+  .hamburger-menu .hamburger-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .menu-section-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0 5px; /* 上下の間隔を調整 */
+  }
+
+  .menu-content button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #007bff;
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
+
+  .menu-content button:hover {
+    background-color: #f0f8ff;
+  }
+
+  .menu-content label {
+    display: block;
+    margin: 10px 0 5px;
+    font-size: 0.9rem;
+  }
+
+  .menu-content input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+</style>
+
   </div>
 
-  <div id="progress">Loading progress...</div>
+  <div id="progress">あと5語 / 合計5語</div>
+  <div id="currentSection">現在のセクション: セクション1</div>
 
-  <div class="card">
+  <div class="card front">
     <h2 id="wordDisplay">Loading...</h2>
     <p id="meaningDisplay"></p>
+    <p id="hintDisplay"></p>
   </div>
 
   <div class="actions">
-    <button id="confirmButton" onclick="showBack()">確認</button>
+    <button id="confirmButton" onclick="showBack()">答えを見る</button>
     <button id="learnedButton" onclick="markAsLearned()">覚えた</button>
-    <button id="notLearnedButton" onclick="nextCard()">覚えていない</button>
-    <button id="speakButton" onclick="speakCurrentWord()">🔊 発音</button>
+    <button id="notLearnedButton" onclick="nextCard()">次の単語</button>
+    <button id="hintButton" onclick="showHint()">ヒント</button>
+    <button id="speakButton" onclick="speakCurrentWord()">発音</button>
+    <button id="addToMyWordsButton" onclick="addToMyWords()">My単語帳に追加</button>
   </div>
+
+  <div id="sections"></div>
+
+  <script>
+    // ハンバーガーメニューのトグル機能
+    document.querySelector('.hamburger-button').addEventListener('click', () => {
+      const menuContent = document.querySelector('.menu-content');
+      menuContent.style.display = menuContent.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // メニュー外をクリックしたら閉じる処理
+    document.addEventListener('click', (event) => {
+      const menu = document.querySelector('.hamburger-menu');
+      if (!menu.contains(event.target)) {
+        document.querySelector('.menu-content').style.display = 'none';
+      }
+    });
+
+    // セクションサイズの更新
+    function updateSectionSize() {
+      const sectionSizeInput = document.getElementById('sectionSizeInput');
+      const newSize = parseInt(sectionSizeInput.value, 10);
+      if (newSize > 0 && newSize <= 100) {
+        SECTION_SIZE = newSize; // 新しいセクションサイズに更新
+        splitIntoSections(); // セクションを再生成
+        createSectionButtons(); // ボタンを再生成
+        resetList(); // 現在のセクションをリセット
+        alert(`セクション単語数を${newSize}語に変更しました。`);
+      } else {
+        alert('セクション単語数は1〜100の間で指定してください。');
+      }
+    }
+  </script>
+
+<div id="addToMyWordsForm" style="margin: 20px; text-align: center;">
+  <input type="text" id="newMyWord" placeholder="英単語" style="margin: 5px; padding: 5px;">
+  <input type="text" id="newMyMeaning" placeholder="日本語訳" style="margin: 5px; padding: 5px;">
+  <input type="text" id="newMyHint" placeholder="ヒント (任意)" style="margin: 5px; padding: 5px;">
+  <button onclick="addWordToMyWords()">My単語帳に追加</button>
+</div>
 
   <script src="app.js"></script>
 </body>
