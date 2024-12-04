@@ -529,6 +529,11 @@ function showHint() {
 }
 
 function speakCurrentWord() { 
+
+  // ResponsiveVoice.js を利用した実装を追加
+  console.log('Checking if ResponsiveVoice is available...'); // デバッグログを追加
+  console.log('typeof responsiveVoice:', typeof responsiveVoice); // デバッグ用にログを出力
+
   // ResponsiveVoice.js を利用した実装を追加
   if (typeof responsiveVoice !== 'undefined') {
     // 現在の単語データが有効かチェック
