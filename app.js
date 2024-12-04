@@ -530,6 +530,14 @@ function showHint() {
 
 function speakCurrentWord() { 
 
+console.log('ResponsiveVoice.js のロードを確認中...');
+if (typeof responsiveVoice === 'undefined') {
+  console.error('ResponsiveVoice.js がロードされていません。');
+} else {
+  console.log('ResponsiveVoice.js が正しくロードされました。');
+}
+
+
   // ResponsiveVoice.js を利用した実装を追加
   console.log('Checking if ResponsiveVoice is available...'); // デバッグログを追加
   console.log('typeof responsiveVoice:', typeof responsiveVoice); // デバッグ用にログを出力
